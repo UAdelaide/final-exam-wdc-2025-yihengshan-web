@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../models/db');
 
-
+// GET all users (for admin/testing)
 router.get('/', async (req, res) => {
   try {
     const [rows] = await db.query('SELECT user_id, username, email, role FROM Users');
@@ -12,6 +12,7 @@ router.get('/', async (req, res) => {
   }
 });
 
+// POST a new user (simple signup)
 router.post('/register', async (req, res) => {
   const { username, email, password, role } = req.body;
 
@@ -33,7 +34,8 @@ router.get('/me', (req, res) => {
   }
   res.json(req.session.user);
 });
-
+;
+// POST login using username and password
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
@@ -47,19 +49,17 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-
     req.session.user = {
       user_id: rows[0].user_id,
       username: rows[0].username,
       role: rows[0].role
     };
 
-
     res.json({ message: 'Login successful', role: rows[0].role });
-  } catch (error) {
-    console.error('Login error:', error);
+  } catch (err) {
     res.status(500).json({ error: 'Login failed' });
   }
 });
+
 
 module.exports = router;
