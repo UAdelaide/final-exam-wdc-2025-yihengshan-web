@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dog of the Day</title>
+  <script src="https://unpkg.com/vue@3"></script>
+  <style>
+    body {
+      font-family: Comic Sans MS;
+      background: linear-gradient(to right, yellow, pink);
+      color: green;
+      animation: spin 20s linear infinite; 
+      margin: 0;
+      text-align: center;
+      padding-top: 50px;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    img {
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      border: 5px dashed red;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: black;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>🐶 Dog of the Day 🐶</h1>
+    <button @click="fetchDog">Click me 3 times to see the dog!</button>
+    <div v-if="imageUrl">
+      <img :src="imageUrl" alt="dog image" />
+      <p>This is a very cool dog, trust us. 😎</p>
+    </div>
+  </div>
+
+  <script>
+    Vue.createApp({
+      data() {
+        return {
+          imageUrl: null,
+          clickCount: 0
+        };
+      },
+      methods: {
+        fetchDog() {
+          this.clickCount++;
+          if (this.clickCount >= 3) {
+            fetch("https://dog.ceo/api/breeds/image/random")
+              .then(res => res.json())
+              .then(data => {
+                this.imageUrl = data.message;
+              });
+            this.clickCount = 0;
+          } else {
+            alert(`Keep clicking! ${3 - this.clickCount} more to go.`);
+          }
+        }
+      }
+    }).mount("#app");
+  </script>
+</body>
+</html>
+
+
+
